@@ -94,13 +94,37 @@ jupyter notebook notebooks/02_model_experiments.ipynb
 ```
 
 ### 5. Launch Dashboard
+
+#### Option A: One-Click Launch (Recommended)
 ```bash
-# Validate files exist
-python validate_dashboard_files.py
+# For Windows Command Prompt:
+run_dashboard.bat
+
+# For PowerShell:
+.\run_dashboard.ps1
+```
+
+#### Option B: Manual Launch
+```bash
+# First activate conda environment:
+.\activate_env.bat        # Command Prompt
+# OR
+.\activate_env.ps1        # PowerShell
+
+# Then start dashboard:
+streamlit run app/dashboard.py
+```
+
+#### Option C: Traditional Method (if conda init is configured)
+```bash
+# Activate environment
+conda activate customer-churn
 
 # Start Streamlit app
 streamlit run app/dashboard.py
 ```
+
+**Note**: If you encounter `CondaError: Run 'conda init' before 'conda activate'`, see [CONDA_SETUP_GUIDE.md](CONDA_SETUP_GUIDE.md) for solutions.
 
 The dashboard will open at `http://localhost:8501` with:
 - 📈 **Overview**: Summary metrics and risk distribution

@@ -1064,61 +1064,116 @@ def render_individual_prediction_page(model, original_data):
     Render individual customer prediction page.
     
     Features:
-    - Input customer attributes
+    - Interactive input form with all customer attributes
     - Real-time churn probability calculation
+    - Risk tier classification with color-coded metrics
     - SHAP explanation for prediction
-    - Recommended retention action
+    - Top factors increasing/decreasing churn risk
+    - Recommended retention action with priority and cost
+    - What-if analysis for exploring interventions
     """
     st.header("🔍 Individual Customer Prediction")
     
-    st.write("Enter customer details to predict churn risk and get retention recommendations.")
+    st.markdown("""
+    Enter customer details below to predict churn risk in real-time. 
+    This tool is designed for customer service representatives to quickly assess risk 
+    and identify the best retention strategies.
+    """)
+    
+    # Initialize session state for what-if analysis
+    if 'prediction_made' not in st.session_state:
+        st.session_state.prediction_made = False
+    if 'original_inputs' not in st.session_state:
+        st.session_state.original_inputs = {}
     
     # Create input form
-    with st.form("customer_input_form"):
-        st.subheader("Customer Information")
-        
-        col1, col2, col3 = st.columns(3)
-        
-        with col1:
-            tenure = st.number_input("Tenure (months)", min_value=0, max_value=100, value=12)
-            monthly_charges = st.number_input("Monthly Charges ($)", min_value=0.0, max_value=200.0, value=70.0, step=5.0)
-            total_charges = st.number_input("Total Charges ($)", min_value=0.0, max_value=10000.0, value=840.0, step=50.0)
-        
-        with col2:
-            gender = st.selectbox("Gender", ["Male", "Female"])
-            senior_citizen = st.selectbox("Senior Citizen", ["No", "Yes"])
-            partner = st.selectbox("Has Partner", ["No", "Yes"])
-            dependents = st.selectbox("Has Dependents", ["No", "Yes"])
-        
-        with col3:
-            phone_service = st.selectbox("Phone Service", ["No", "Yes"])
-            internet_service = st.selectbox("Internet Service", ["No", "DSL", "Fiber optic"])
-            contract = st.selectbox("Contract", ["Month-to-month", "One year", "Two year"])
-            paperless_billing = st.selectbox("Paperless Billing", ["No", "Yes"])
-        
-        st.subheader("Additional Services")
-        col1, col2, col3, col4 = st.columns(4)
-        
-        with col1:
-            multiple_lines = st.selectbox("Multiple Lines", ["No", "Yes", "No phone service"])
-            online_security = st.selectbox("Online Security", ["No", "Yes", "No internet service"])
-        
-        with col2:
-            online_backup = st.selectbox("Online Backup", ["No", "Yes", "No internet service"])
-            device_protection = st.selectbox("Device Protection", ["No", "Yes", "No internet service"])
-        
-        with col3:
-            tech_support = st.selectbox("Tech Support", ["No", "Yes", "No internet service"])
-            streaming_tv = st.selectbox("Streaming TV", ["No", "Yes", "No internet service"])
-        
-        with col4:
-            streaming_movies = st.selectbox("Streaming Movies", ["No", "Yes", "No internet service"])
-            payment_method = st.selectbox("Payment Method", 
-                ["Electronic check", "Mailed check", "Bank transfer (automatic)", "Credit card (automatic)"])
-        
-        submit_button = st.form_submit_button("🔮 Predict Churn Risk")
+    st.subheader("📝 Customer Information")
     
-    if submit_button:
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        st.markdown("**Demographics**")
+        senior_citizen = st.selectbox("👴 Senior Citizen", ["No", "Yes"], key="senior")
+        partner = st.selectbox("👥 Has Partner", ["No", "Yes"], key="partner")
+        dependents = st.selectbox("👶 Has Dependents", ["No", "Yes"], key="dependents")
+        
+        st.markdown("---")
+        st.markdown("**Account Details**")
+        tenure = st.slider("📅 Tenure (months)", min_value=0, max_value=72, value=12, key="tenure")
+        monthly_charges = st.number_input(
+            "💰 Monthly Charges ($)", 
+            min_value=0.0, 
+            max_value=200.0, 
+            value=70.0, 
+            step=5.0,
+            key="monthly"
+        )
+    
+    with col2:
+        st.markdown("**Contract & Billing**")
+        contract = st.selectbox(
+            "📄 Contract Type", 
+            ["Month-to-month", "One year", "Two year"],
+            key="contract"
+        )
+        payment_method = st.selectbox(
+            "💳 Payment Method", 
+            ["Electronic check", "Mailed check", "Bank transfer (automatic)", "Credit card (automatic)"],
+            key="payment"
+        )
+        paperless_billing = st.selectbox("📧 Paperless Billing", ["No", "Yes"], key="paperless")
+        
+        st.markdown("---")
+        st.markdown("**Phone Services**")
+        phone_service = st.selectbox("📞 Phone Service", ["No", "Yes"], key="phone")
+        multiple_lines = st.selectbox("📱 Multiple Lines", ["No", "Yes", "No phone service"], key="lines")
+    
+    with col3:
+        st.markdown("**Internet Services**")
+        internet_service = st.selectbox(
+            "🌐 Internet Service", 
+            ["No", "DSL", "Fiber optic"],
+            key="internet"
+        )
+        online_security = st.selectbox(
+            "🔒 Online Security", 
+            ["No", "Yes", "No internet service"],
+            key="security"
+        )
+        tech_support = st.selectbox(
+            "🛠️ Tech Support", 
+            ["No", "Yes", "No internet service"],
+            key="support"
+        )
+        online_backup = st.selectbox(
+            "💾 Online Backup", 
+            ["No", "Yes", "No internet service"],
+            key="backup"
+        )
+        device_protection = st.selectbox(
+            "🛡️ Device Protection", 
+            ["No", "Yes", "No internet service"],
+            key="protection"
+        )
+    
+    st.markdown("**Streaming Services**")
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        streaming_tv = st.selectbox("📺 Streaming TV", ["No", "Yes", "No internet service"], key="tv")
+    with col2:
+        streaming_movies = st.selectbox("🎬 Streaming Movies", ["No", "Yes", "No internet service"], key="movies")
+    with col3:
+        gender = st.selectbox("⚧ Gender", ["Male", "Female"], key="gender")
+    
+    st.markdown("---")
+    
+    # Predict button
+    predict_clicked = st.button("🔮 Predict Churn Risk", type="primary", use_container_width=True)
+    
+    if predict_clicked:
+        # Calculate total charges based on tenure and monthly charges
+        total_charges = tenure * monthly_charges
+        
         # Create customer dataframe
         customer_data = pd.DataFrame({
             'gender': [gender],
@@ -1145,66 +1200,424 @@ def render_individual_prediction_page(model, original_data):
         # Try to apply feature engineering
         fe = load_feature_engineer()
         
-        if fe is not None:
-            try:
-                # Transform customer data
-                customer_features = fe.transform(customer_data)
+        if fe is None:
+            st.error("⚠️ Feature engineer not found. Cannot process custom input.")
+            st.info("To enable individual predictions, ensure `models/feature_engineer.pkl` exists.")
+            st.stop()
+        
+        try:
+            # Transform customer data
+            customer_features = fe.transform(customer_data)
+            
+            # Get prediction
+            churn_prob = model.predict_proba(customer_features)[0, 1]
+            risk_tier = classify_risk_tier(churn_prob)
+            
+            # Store in session state for what-if analysis
+            st.session_state.prediction_made = True
+            st.session_state.original_inputs = {
+                'customer_data': customer_data,
+                'customer_features': customer_features,
+                'churn_prob': churn_prob,
+                'risk_tier': risk_tier,
+                'tenure': tenure,
+                'monthly_charges': monthly_charges,
+                'total_charges': total_charges,
+                'contract': contract,
+                'internet_service': internet_service,
+                'online_security': online_security,
+                'tech_support': tech_support,
+                'payment_method': payment_method
+            }
+            
+            # ============================================
+            # 3. RESULTS DISPLAY
+            # ============================================
+            st.markdown("---")
+            st.header("📊 Prediction Results")
+            
+            # Large metrics with color-coding
+            col1, col2, col3, col4 = st.columns(4)
+            
+            with col1:
+                # Color-code based on risk level
+                if churn_prob >= 0.70:
+                    prob_color = "🔴"
+                    delta_color = "inverse"
+                elif churn_prob >= 0.40:
+                    prob_color = "🟠"
+                    delta_color = "off"
+                else:
+                    prob_color = "🟢"
+                    delta_color = "normal"
                 
-                # Get prediction
-                churn_prob = model.predict_proba(customer_features)[0, 1]
-                risk_tier = classify_risk_tier(churn_prob)
-                
-                # Display results
-                st.markdown("---")
-                st.subheader("Prediction Results")
-                
-                col1, col2, col3 = st.columns(3)
-                
-                with col1:
-                    st.metric("Churn Probability", f"{churn_prob:.1%}")
-                
-                with col2:
-                    color = "🔴" if risk_tier == "HIGH" else "🟠" if risk_tier == "MEDIUM" else "🟢"
-                    st.metric("Risk Tier", f"{color} {risk_tier}")
-                
-                with col3:
-                    # Calculate retention value
-                    from src.retention_strategy import calculate_retention_value
-                    retention_value = calculate_retention_value({
-                        'MonthlyCharges': monthly_charges,
-                        'tenure': tenure,
-                        'Contract': contract
-                    })
-                    st.metric("Est. Retention Value", f"${retention_value:,.0f}")
-                
-                # Recommendation
-                st.subheader("Recommended Action")
-                
-                customer_profile = {
+                st.metric(
+                    "Churn Probability",
+                    f"{prob_color} {churn_prob:.1%}",
+                    delta=f"{(churn_prob - 0.5):.1%} from baseline",
+                    delta_color=delta_color,
+                    help="Predicted likelihood that customer will churn"
+                )
+            
+            with col2:
+                # Risk tier badge
+                tier_emoji = {"HIGH": "🔴", "MEDIUM": "🟠", "LOW": "🟢"}
+                st.metric(
+                    "Risk Tier",
+                    f"{tier_emoji[risk_tier]} {risk_tier}",
+                    help="Risk classification based on probability threshold"
+                )
+            
+            with col3:
+                # Calculate retention value
+                from src.retention_strategy import calculate_retention_value
+                retention_value = calculate_retention_value({
                     'MonthlyCharges': monthly_charges,
                     'tenure': tenure,
-                    'Contract': contract,
-                    'TotalCharges': total_charges
-                }
+                    'Contract': contract
+                })
+                st.metric(
+                    "Est. Retention Value",
+                    f"${retention_value:,.0f}",
+                    help="Estimated value of retaining this customer over 12 months"
+                )
+            
+            with col4:
+                # Customer lifetime value
+                clv = monthly_charges * 36  # 3-year estimate
+                st.metric(
+                    "3-Year CLV",
+                    f"${clv:,.0f}",
+                    help="Estimated customer lifetime value over 3 years"
+                )
+            
+            st.markdown("---")
+            
+            # ============================================
+            # Recommended Action
+            # ============================================
+            st.header("💡 Recommended Retention Action")
+            
+            customer_profile = {
+                'MonthlyCharges': monthly_charges,
+                'tenure': tenure,
+                'Contract': contract,
+                'TotalCharges': total_charges
+            }
+            
+            rec = recommend_action(risk_tier, customer_profile)
+            
+            # Display recommendation in a nice card
+            if risk_tier == "HIGH":
+                st.error(f"**⚠️ HIGH PRIORITY ACTION REQUIRED**")
+            elif risk_tier == "MEDIUM":
+                st.warning(f"**⚡ PROACTIVE ENGAGEMENT RECOMMENDED**")
+            else:
+                st.success(f"**✅ STANDARD CUSTOMER CARE**")
+            
+            st.markdown(f"### {rec['action']}")
+            
+            col1, col2, col3, col4 = st.columns(4)
+            with col1:
+                st.metric("Priority Level", rec['priority'], help="1=Urgent, 2=Important, 3=Standard")
+            with col2:
+                st.metric("Contact Channel", rec['channel'], help="Recommended communication channel")
+            with col3:
+                st.metric("Discount Offer", f"{rec['discount_percentage']}%", help="Suggested discount percentage")
+            with col4:
+                st.metric("Est. Cost", f"${rec['estimated_cost']:,.0f}", help="Estimated cost of intervention")
+            
+            # ROI Calculation
+            roi = ((retention_value - rec['estimated_cost']) / rec['estimated_cost'] * 100) if rec['estimated_cost'] > 0 else float('inf')
+            if roi != float('inf'):
+                st.info(f"📈 **Expected ROI:** {roi:.0f}% (${retention_value:,.0f} value - ${rec['estimated_cost']:,.0f} cost)")
+            
+            st.markdown("---")
+            
+            # ============================================
+            # 4. EXPLANATION SECTION
+            # ============================================
+            st.header("🔍 Prediction Explanation")
+            
+            try:
+                import shap
+                import matplotlib.pyplot as plt
+                from io import BytesIO
                 
-                rec = recommend_action(risk_tier, customer_profile)
+                # Create SHAP explainer
+                try:
+                    explainer = shap.TreeExplainer(model)
+                except:
+                    # Use a sample of training data for KernelExplainer
+                    X_test = st.session_state.get('X_test', None)
+                    if X_test is not None:
+                        sample_data = X_test.sample(min(100, len(X_test)), random_state=42)
+                        explainer = shap.Explainer(model.predict, sample_data)
+                    else:
+                        raise Exception("Cannot create SHAP explainer without training data")
                 
-                st.info(f"**{rec['action']}**")
+                # Calculate SHAP values for this prediction
+                shap_values = explainer.shap_values(customer_features)
                 
-                col1, col2, col3 = st.columns(3)
+                # Handle different SHAP value formats
+                if isinstance(shap_values, list):
+                    shap_values_single = shap_values[1][0]  # Binary classification, positive class
+                    expected_value = explainer.expected_value[1]
+                else:
+                    shap_values_single = shap_values[0]
+                    expected_value = explainer.expected_value
+                
+                # Get feature names
+                feature_names = customer_features.columns.tolist()
+                
+                # Create two columns for explanation
+                col1, col2 = st.columns([2, 1])
+                
                 with col1:
-                    st.write(f"**Priority:** {rec['priority']}")
+                    st.subheader("📊 SHAP Waterfall Plot")
+                    st.caption("Shows how each feature pushes the prediction from the base value")
+                    
+                    # Create waterfall plot
+                    fig, ax = plt.subplots(figsize=(10, 8))
+                    shap.waterfall_plot(
+                        shap.Explanation(
+                            values=shap_values_single,
+                            base_values=expected_value,
+                            data=customer_features.iloc[0].values,
+                            feature_names=feature_names
+                        ),
+                        show=False
+                    )
+                    st.pyplot(fig)
+                    plt.close()
+                
                 with col2:
-                    st.write(f"**Channel:** {rec['channel']}")
-                with col3:
-                    st.write(f"**Discount:** {rec['discount_percentage']}%")
+                    st.subheader("📈 Feature Impact Summary")
+                    
+                    # Get top positive and negative SHAP values
+                    shap_df = pd.DataFrame({
+                        'feature': feature_names,
+                        'shap_value': shap_values_single,
+                        'feature_value': customer_features.iloc[0].values
+                    })
+                    shap_df = shap_df.sort_values('shap_value', ascending=False)
+                    
+                    # Top factors increasing risk
+                    st.markdown("**🔺 Top 5 Factors Increasing Risk:**")
+                    top_increasing = shap_df.head(5)
+                    for idx, row in top_increasing.iterrows():
+                        if row['shap_value'] > 0:
+                            st.markdown(f"- **{row['feature']}**: +{row['shap_value']:.3f}")
+                            st.caption(f"  Value: {row['feature_value']:.2f}")
+                    
+                    st.markdown("---")
+                    
+                    # Top factors decreasing risk
+                    st.markdown("**🔻 Top 5 Factors Decreasing Risk:**")
+                    top_decreasing = shap_df.tail(5).iloc[::-1]
+                    for idx, row in top_decreasing.iterrows():
+                        if row['shap_value'] < 0:
+                            st.markdown(f"- **{row['feature']}**: {row['shap_value']:.3f}")
+                            st.caption(f"  Value: {row['feature_value']:.2f}")
                 
             except Exception as e:
-                st.error(f"Error during prediction: {str(e)}")
-                st.info("The feature engineer may not be compatible with the input data format.")
-        else:
-            st.warning("⚠️ Feature engineer not found. Cannot process custom input.")
-            st.info("To enable individual predictions, ensure `models/feature_engineer.pkl` exists.")
+                st.warning(f"⚠️ Could not generate SHAP explanation: {str(e)}")
+                st.info("SHAP explanations require the model to be compatible with TreeExplainer or sufficient training data.")
+            
+            st.markdown("---")
+            
+            # ============================================
+            # 5. WHAT-IF ANALYSIS
+            # ============================================
+            st.header("🔄 What-If Analysis")
+            st.markdown("Explore how changes to customer attributes would impact churn risk")
+            
+            # Create tabs for different what-if scenarios
+            scenario_tab1, scenario_tab2, scenario_tab3 = st.tabs([
+                "📄 Contract Upgrade",
+                "🌐 Service Changes",
+                "💳 Payment Method"
+            ])
+            
+            with scenario_tab1:
+                st.subheader("Impact of Contract Changes")
+                
+                # Show current contract
+                st.write(f"**Current Contract:** {contract}")
+                st.write(f"**Current Risk:** {churn_prob:.1%}")
+                
+                # Simulate different contracts
+                contracts_to_test = ["Month-to-month", "One year", "Two year"]
+                contract_results = []
+                
+                for test_contract in contracts_to_test:
+                    if test_contract != contract:
+                        # Create modified customer data
+                        modified_data = customer_data.copy()
+                        modified_data['Contract'] = [test_contract]
+                        
+                        # Transform and predict
+                        modified_features = fe.transform(modified_data)
+                        new_prob = model.predict_proba(modified_features)[0, 1]
+                        prob_change = new_prob - churn_prob
+                        
+                        contract_results.append({
+                            'Contract': test_contract,
+                            'New Probability': f"{new_prob:.1%}",
+                            'Change': f"{prob_change:+.1%}",
+                            'Risk Reduction': f"{abs(prob_change):.1%}" if prob_change < 0 else "N/A"
+                        })
+                
+                if contract_results:
+                    results_df = pd.DataFrame(contract_results)
+                    st.dataframe(results_df, use_container_width=True)
+                    
+                    # Best recommendation
+                    if len(contract_results) > 0:
+                        best_option = min(contract_results, key=lambda x: float(x['New Probability'].strip('%')))
+                        st.success(f"💡 **Recommendation:** Switching to **{best_option['Contract']}** would reduce risk to {best_option['New Probability']}")
+            
+            with scenario_tab2:
+                st.subheader("Impact of Additional Services")
+                
+                services_to_test = [
+                    ('OnlineSecurity', 'Yes', 'Adding Online Security'),
+                    ('TechSupport', 'Yes', 'Adding Tech Support'),
+                    ('OnlineBackup', 'Yes', 'Adding Online Backup'),
+                    ('StreamingTV', 'Yes', 'Adding Streaming TV'),
+                    ('StreamingMovies', 'Yes', 'Adding Streaming Movies')
+                ]
+                
+                service_results = []
+                
+                for service_col, service_val, description in services_to_test:
+                    # Only test if customer doesn't already have the service
+                    current_val = customer_data[service_col].iloc[0]
+                    if current_val != service_val and current_val != "No internet service":
+                        # Create modified customer data
+                        modified_data = customer_data.copy()
+                        modified_data[service_col] = [service_val]
+                        
+                        # Transform and predict
+                        modified_features = fe.transform(modified_data)
+                        new_prob = model.predict_proba(modified_features)[0, 1]
+                        prob_change = new_prob - churn_prob
+                        
+                        service_results.append({
+                            'Service Change': description,
+                            'New Probability': f"{new_prob:.1%}",
+                            'Change': f"{prob_change:+.1%}",
+                            'Impact': '✅ Reduces Risk' if prob_change < -0.05 else '⚠️ Minor Impact' if abs(prob_change) < 0.05 else '❌ Increases Risk'
+                        })
+                
+                if service_results:
+                    results_df = pd.DataFrame(service_results)
+                    st.dataframe(results_df, use_container_width=True)
+                    
+                    # Best services to add
+                    positive_impact = [r for r in service_results if 'Reduces' in r['Impact']]
+                    if positive_impact:
+                        st.success(f"💡 **Top Recommendation:** {positive_impact[0]['Service Change']} (Risk: {positive_impact[0]['New Probability']})")
+                else:
+                    st.info("Customer already has all testable services enabled.")
+            
+            with scenario_tab3:
+                st.subheader("Impact of Payment Method Changes")
+                
+                st.write(f"**Current Payment Method:** {payment_method}")
+                st.write(f"**Current Risk:** {churn_prob:.1%}")
+                
+                # Test different payment methods
+                payment_methods = [
+                    "Electronic check",
+                    "Mailed check",
+                    "Bank transfer (automatic)",
+                    "Credit card (automatic)"
+                ]
+                
+                payment_results = []
+                
+                for test_payment in payment_methods:
+                    if test_payment != payment_method:
+                        # Create modified customer data
+                        modified_data = customer_data.copy()
+                        modified_data['PaymentMethod'] = [test_payment]
+                        
+                        # Transform and predict
+                        modified_features = fe.transform(modified_data)
+                        new_prob = model.predict_proba(modified_features)[0, 1]
+                        prob_change = new_prob - churn_prob
+                        
+                        payment_results.append({
+                            'Payment Method': test_payment,
+                            'New Probability': f"{new_prob:.1%}",
+                            'Change': f"{prob_change:+.1%}",
+                            'Recommendation': '✅ Switch' if prob_change < -0.05 else '➡️ Consider' if prob_change < 0 else '❌ No Change'
+                        })
+                
+                if payment_results:
+                    results_df = pd.DataFrame(payment_results)
+                    st.dataframe(results_df, use_container_width=True)
+                    
+                    # Best payment method
+                    best_payment = min(payment_results, key=lambda x: float(x['New Probability'].strip('%')))
+                    if float(best_payment['New Probability'].strip('%')) < churn_prob * 100:
+                        st.success(f"💡 **Recommendation:** Switching to **{best_payment['Payment Method']}** would reduce risk to {best_payment['New Probability']}")
+            
+            # Combined intervention simulation
+            st.markdown("---")
+            st.subheader("🎯 Combined Intervention Simulator")
+            st.markdown("See the impact of multiple changes at once")
+            
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                combo_contract = st.selectbox("Contract", contracts_to_test, key="combo_contract")
+                combo_security = st.selectbox("Online Security", ["No", "Yes", "No internet service"], key="combo_security")
+                combo_support = st.selectbox("Tech Support", ["No", "Yes", "No internet service"], key="combo_support")
+            
+            with col2:
+                combo_payment = st.selectbox("Payment Method", payment_methods, key="combo_payment")
+                combo_backup = st.selectbox("Online Backup", ["No", "Yes", "No internet service"], key="combo_backup")
+            
+            if st.button("🔮 Simulate Combined Changes"):
+                # Create modified customer data
+                combined_data = customer_data.copy()
+                combined_data['Contract'] = [combo_contract]
+                combined_data['OnlineSecurity'] = [combo_security]
+                combined_data['TechSupport'] = [combo_support]
+                combined_data['PaymentMethod'] = [combo_payment]
+                combined_data['OnlineBackup'] = [combo_backup]
+                
+                # Transform and predict
+                combined_features = fe.transform(combined_data)
+                combined_prob = model.predict_proba(combined_features)[0, 1]
+                combined_change = combined_prob - churn_prob
+                combined_risk = classify_risk_tier(combined_prob)
+                
+                # Display results
+                col1, col2, col3 = st.columns(3)
+                with col1:
+                    st.metric("Original Risk", f"{churn_prob:.1%}", help="Current churn probability")
+                with col2:
+                    st.metric("New Risk", f"{combined_prob:.1%}", delta=f"{combined_change:+.1%}", delta_color="inverse")
+                with col3:
+                    tier_emoji = {"HIGH": "🔴", "MEDIUM": "🟠", "LOW": "🟢"}
+                    st.metric("New Risk Tier", f"{tier_emoji[combined_risk]} {combined_risk}")
+                
+                if combined_change < -0.10:
+                    st.success(f"🎉 **Excellent!** This combination reduces churn risk by {abs(combined_change):.1%}")
+                elif combined_change < 0:
+                    st.info(f"✅ **Good.** This combination reduces churn risk by {abs(combined_change):.1%}")
+                else:
+                    st.warning(f"⚠️ This combination increases churn risk by {combined_change:.1%}")
+            
+        except Exception as e:
+            st.error(f"❌ Error during prediction: {str(e)}")
+            st.info("The feature engineer may not be compatible with the input data format.")
+            import traceback
+            with st.expander("Show detailed error"):
+                st.code(traceback.format_exc())
 
 
 if __name__ == "__main__":
