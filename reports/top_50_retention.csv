@@ -1,0 +1,51 @@
+customerID,churn_probability,risk_tier,recommended_action,retention_value,key_risk_factors,Contract,tenure,MonthlyCharges
+7359-SSBJK,0.9618524927570848,HIGH,Personal outreach from account manager with 20% discount and priority support upgrade,1111.97,"Has Fiber, Monthly charges, Avg Monthly Spend",Two year,64,70.2
+8738-JOKAR,0.9553017811913874,HIGH,"Personal outreach with 15% discount, priority support, and service review",893.64,"Has Fiber, Monthly charges, Avg Monthly Spend",One year,42,67.7
+7931-PXHFC,0.9517729486671993,HIGH,"Personal outreach with 15% discount, priority support, and service review",822.36,"Has Fiber, Monthly charges, Avg Monthly Spend",One year,38,62.3
+7268-WNTCP,0.950923889016557,HIGH,"Personal outreach with 15% discount, priority support, and service review",323.93,"Has Fiber, Monthly charges, Avg Monthly Spend",Two year,62,20.45
+7435-ZNUYY,0.949437068653751,HIGH,"Personal outreach with 15% discount, priority support, and service review",222.48,"Has Fiber, Monthly charges, Avg Monthly Spend",One year,6,20.6
+2740-JFBOK,0.9455434663459885,HIGH,Personal outreach with 15% discount and 1-year contract upgrade offer,181.44,"Has Fiber, Monthly charges, Avg Monthly Spend",Month-to-month,10,24.0
+7248-VZQLC,0.9443156651145275,HIGH,Personal outreach from account manager with 20% discount and priority support upgrade,787.25,"Has Fiber, Monthly charges, Avg Monthly Spend",Month-to-month,47,85.2
+1389-WNUIB,0.9438227621465256,HIGH,Personal outreach from account manager with 20% discount and priority support upgrade,912.0,"Has Fiber, Monthly charges, Avg Monthly Spend",One year,20,76.0
+8169-SAEJD,0.942134494591898,HIGH,"Personal outreach with 15% discount, priority support, and service review",895.75,"Has Fiber, Monthly charges, Avg Monthly Spend",Two year,69,56.55
+2834-JKOOW,0.941346828896818,HIGH,"Personal outreach with 15% discount, priority support, and service review",550.8,"Has Fiber, Monthly charges, Avg Monthly Spend",One year,15,45.9
+2322-VCZHZ,0.939780780225372,HIGH,Personal outreach from account manager with 20% discount and priority support upgrade,756.0,"Has Fiber, Monthly charges, Avg Monthly Spend",Month-to-month,23,90.0
+9451-LPGOO,0.9397348680325037,HIGH,Personal outreach from account manager with 20% discount and priority support upgrade,656.21,"Has Fiber, Monthly charges, Avg Monthly Spend",Month-to-month,7,86.8
+2824-MYYBN,0.9368886166228063,HIGH,Personal outreach from account manager with 20% discount and priority support upgrade,880.11,"Has Fiber, Monthly charges, Avg Monthly Spend",Month-to-month,37,95.25
+3685-YLCMQ,0.9361415121843327,HIGH,Personal outreach from account manager with 20% discount and priority support upgrade,1381.38,"Has Fiber, Monthly charges, Avg Monthly Spend",One year,58,104.65
+4983-CCWMC,0.9345628396412579,HIGH,Personal outreach with 15% discount and 1-year contract upgrade offer,467.71,"Has Fiber, Monthly charges, Avg Monthly Spend",Month-to-month,3,69.6
+0147-ESWWR,0.9344867801566621,HIGH,Personal outreach from account manager with 20% discount and priority support upgrade,935.55,"Has Fiber, Monthly charges, Avg Monthly Spend",Month-to-month,39,101.25
+3422-GALYP,0.9342673714420245,HIGH,Personal outreach from account manager with 20% discount and priority support upgrade,533.9,"Has Fiber, Monthly charges, Avg Monthly Spend",Month-to-month,2,79.45
+9928-BZVLZ,0.9298400556886394,HIGH,"Personal outreach with 15% discount, priority support, and service review",717.84,"Has Fiber, Monthly charges, Avg Monthly Spend",Two year,12,49.85
+0239-OXEXL,0.9293539385983712,HIGH,Personal outreach from account manager with 20% discount and priority support upgrade,778.47,"Has Fiber, Monthly charges, Avg Monthly Spend",Month-to-month,46,84.25
+4475-NVTLU,0.9285981980316884,HIGH,"Personal outreach with 15% discount, priority support, and service review",304.13,"Has Fiber, Monthly charges, Avg Monthly Spend",Two year,45,19.2
+8668-KNZTI,0.9280230725056736,HIGH,"Personal outreach with 15% discount, priority support, and service review",709.5,"Has Fiber, Monthly charges, Avg Monthly Spend",One year,52,53.75
+2453-SAFNS,0.9261011368950448,HIGH,Personal outreach from account manager with 20% discount and priority support upgrade,951.72,"Has Fiber, Monthly charges, Avg Monthly Spend",One year,54,72.1
+9074-KGVOX,0.9237145909599128,HIGH,Personal outreach with 15% discount and 1-year contract upgrade offer,364.52,"Has Fiber, Monthly charges, Avg Monthly Spend",Month-to-month,50,39.45
+7672-VFMXZ,0.923490860588885,HIGH,Personal outreach with 15% discount and 1-year contract upgrade offer,514.67,"Has Fiber, Monthly charges, Avg Monthly Spend",Month-to-month,57,55.7
+2974-GGUXS,0.9229689789750574,HIGH,Personal outreach from account manager with 20% discount and priority support upgrade,849.62,"Has Fiber, Monthly charges, Avg Monthly Spend",Month-to-month,36,91.95
+1697-NVVGY,0.9221480732827125,HIGH,Personal outreach with 15% discount and 1-year contract upgrade offer,557.76,"Has Fiber, Monthly charges, Avg Monthly Spend",Month-to-month,19,66.4
+5915-DGNVC,0.9190390494293686,HIGH,Personal outreach from account manager with 20% discount and priority support upgrade,947.76,"Has Fiber, Monthly charges, Avg Monthly Spend",One year,49,71.8
+9286-DOJGF,0.9175845129213706,HIGH,Personal outreach from account manager with 20% discount and priority support upgrade,692.54,"Has Fiber, Monthly charges, Avg Monthly Spend",Month-to-month,38,74.95
+4815-GBTCD,0.9174146571901217,HIGH,Personal outreach with 15% discount and 1-year contract upgrade offer,169.01,"Has Fiber, Monthly charges, Avg Monthly Spend",Month-to-month,4,25.15
+7619-PLRLP,0.9163518266867432,HIGH,Personal outreach from account manager with 20% discount and priority support upgrade,978.12,"Has Fiber, Monthly charges, Avg Monthly Spend",One year,53,74.1
+9274-CNFMO,0.9162245186724071,HIGH,Personal outreach from account manager with 20% discount and priority support upgrade,503.66,"Has Fiber, Monthly charges, Avg Monthly Spend",Month-to-month,4,74.95
+4079-ULGFR,0.9140795351609102,HIGH,Personal outreach with 15% discount and 1-year contract upgrade offer,168.0,"Has Fiber, Monthly charges, Avg Monthly Spend",Month-to-month,16,20.0
+8107-RZLNV,0.9137805284863615,HIGH,Personal outreach from account manager with 20% discount and priority support upgrade,1683.79,"Has Fiber, Monthly charges, Avg Monthly Spend",Two year,72,106.3
+5876-HZVZM,0.9120883974021142,HIGH,Personal outreach with 15% discount and 1-year contract upgrade offer,422.6,"Has Fiber, Monthly charges, Avg Monthly Spend",Month-to-month,6,55.9
+7609-NRNCA,0.911761574155124,HIGH,"Personal outreach with 15% discount, priority support, and service review",234.6,"Has Fiber, Monthly charges, Avg Monthly Spend",One year,17,19.55
+1750-CSKKM,0.9113658544106067,HIGH,Personal outreach with 15% discount and 1-year contract upgrade offer,418.45,"Has Fiber, Monthly charges, Avg Monthly Spend",Month-to-month,9,55.35
+6434-TTGJP,0.910296989568285,HIGH,"Personal outreach with 15% discount, priority support, and service review",695.95,"Has Fiber, Monthly charges, Avg Monthly Spend",Two year,10,53.7
+6762-NSODU,0.9096656848019725,HIGH,"Personal outreach with 15% discount, priority support, and service review",307.3,"Has Fiber, Monthly charges, Avg Monthly Spend",Two year,46,19.4
+5748-RNCJT,0.9091344229790435,HIGH,Personal outreach from account manager with 20% discount and priority support upgrade,1686.96,"Has Fiber, Monthly charges, Avg Monthly Spend",Two year,69,106.5
+6813-GZQCG,0.9086433718214812,HIGH,"Personal outreach with 15% discount, priority support, and service review",390.46,"Has Fiber, Monthly charges, Avg Monthly Spend",Two year,45,24.65
+8413-VONUO,0.908455877026155,HIGH,Personal outreach from account manager with 20% discount and priority support upgrade,642.77,"Has Fiber, Monthly charges, Avg Monthly Spend",Month-to-month,2,95.65
+1293-BSEUN,0.9083647707118215,HIGH,"Personal outreach with 15% discount, priority support, and service review",327.89,"Has Fiber, Monthly charges, Avg Monthly Spend",Two year,72,20.7
+7718-RXDGG,0.9072234364113221,HIGH,Personal outreach with 15% discount and 1-year contract upgrade offer,576.24,"Has Fiber, Monthly charges, Avg Monthly Spend",Month-to-month,15,68.6
+3410-MHHUM,0.9071529851113733,HIGH,Personal outreach from account manager with 20% discount and priority support upgrade,1246.08,"Has Fiber, Monthly charges, Avg Monthly Spend",One year,44,94.4
+4534-WGCIR,0.9071466190892197,HIGH,"Personal outreach with 15% discount, priority support, and service review",398.38,"Has Fiber, Monthly charges, Avg Monthly Spend",Two year,58,25.15
+1522-VVDMG,0.9070852971925026,HIGH,Personal outreach from account manager with 20% discount and priority support upgrade,678.51,"Has Fiber, Monthly charges, Avg Monthly Spend",Month-to-month,7,89.75
+7562-UXTPG,0.9069286888379836,HIGH,Personal outreach from account manager with 20% discount and priority support upgrade,589.26,"Has Fiber, Monthly charges, Avg Monthly Spend",Month-to-month,13,70.15
+9558-IHEZX,0.9067523182911917,HIGH,Personal outreach from account manager with 20% discount and priority support upgrade,1690.92,"Has Fiber, Monthly charges, Avg Monthly Spend",Two year,71,106.75
+5136-GFPMB,0.9066661734189878,HIGH,Personal outreach from account manager with 20% discount and priority support upgrade,826.06,"Has Fiber, Monthly charges, Avg Monthly Spend",Month-to-month,54,89.4
+3736-BLEPA,0.9064394141652798,HIGH,Personal outreach from account manager with 20% discount and priority support upgrade,1204.5,"Has Fiber, Monthly charges, Avg Monthly Spend",One year,28,91.25
