@@ -5,6 +5,7 @@ A comprehensive end-to-end machine learning solution for predicting customer chu
 ![Python](https://img.shields.io/badge/python-3.9+-blue.svg)
 ![scikit-learn](https://img.shields.io/badge/scikit--learn-latest-orange.svg)
 ![Streamlit](https://img.shields.io/badge/streamlit-latest-red.svg)
+![License](https://img.shields.io/badge/license-MIT-green.svg)
 ![Status](https://img.shields.io/badge/status-production%20ready-brightgreen.svg)
 ![ROC-AUC](https://img.shields.io/badge/ROC--AUC-0.846-success.svg)
 ![Top-Decile](https://img.shields.io/badge/Top--Decile%20Precision-75.2%25-success.svg)
@@ -91,7 +92,7 @@ customer-churn-prediction/
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/yourusername/customer-churn-prediction.git
+git clone https://github.com/samintisar/customer-churn-prediction.git
 cd customer-churn-prediction
 ```
 
