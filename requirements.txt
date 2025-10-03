@@ -14,8 +14,12 @@ shap>=0.41.0
 # Statistical analysis
 statsmodels>=0.14.0
 
-# Dashboard
+# Dashboard & API
 streamlit>=1.25.0
+flask>=2.3.0
+gunicorn>=21.0.0; sys_platform != 'win32'  # For Unix production deployment
+waitress>=3.0.0; sys_platform == 'win32'  # For Windows production deployment
+python-dotenv>=1.0.0  # Environment configuration
 
 # Utilities
 joblib>=1.2.0
