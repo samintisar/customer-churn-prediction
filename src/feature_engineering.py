@@ -52,6 +52,7 @@ class FeatureEngineer:
         self.scaler = StandardScaler()
         self.label_encoders = {}
         self.feature_names = None
+        self.numeric_feature_names = None  # Store which columns to scale
         self.is_fitted = False
         
     def create_tenure_features(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -286,8 +287,9 @@ class FeatureEngineer:
             logger.info(f"Scaling {len(numeric_cols)} numerical features")
             X_scaled[numeric_cols] = self.scaler.fit_transform(X_scaled[numeric_cols])
         
-        # Store feature names for consistency
+        # Store feature names and numeric feature names for consistency
         self.feature_names = X_scaled.columns.tolist()
+        self.numeric_feature_names = numeric_cols  # Store which columns were scaled
         self.is_fitted = True
         
         logger.info(f"Final feature count: {len(self.feature_names)}")
@@ -327,12 +329,12 @@ class FeatureEngineer:
         # Remove extra columns
         X_encoded = X_encoded[self.feature_names]
         
-        # Step 4: Scale numerical features
+        # Step 4: Scale numerical features using the same columns as during fit
         X_scaled = X_encoded.copy()
-        numeric_cols = X_scaled.select_dtypes(include=[np.number]).columns.tolist()
         
-        if numeric_cols:
-            X_scaled[numeric_cols] = self.scaler.transform(X_scaled[numeric_cols])
+        if self.numeric_feature_names:
+            # Only scale the columns that were scaled during fit
+            X_scaled[self.numeric_feature_names] = self.scaler.transform(X_scaled[self.numeric_feature_names])
         
         logger.info(f"Transformed to {X_scaled.shape[1]} features")
         

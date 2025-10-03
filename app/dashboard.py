@@ -165,7 +165,7 @@ def main():
         help="Churn probability threshold for medium risk"
     )
     
-    # Generate predictions for test data
+    # Generate predictions for test data (already preprocessed with 46 features)
     X_test = test_data.drop('Churn', axis=1, errors='ignore')
     y_test = test_data.get('Churn', None)
     
@@ -181,29 +181,47 @@ def main():
         else:
             risk_tiers_custom.append("LOW")
     
-    # Create results dataframe
-    results_df = X_test.copy()
+    # Create results dataframe using original data for display (raw features are more readable)
+    # Need to recreate the split to align with test data
+    if original_data is not None:
+        from sklearn.model_selection import train_test_split
+        
+        # Drop customerID if it exists
+        original_for_split = original_data.drop('customerID', axis=1, errors='ignore')
+        
+        # Separate features and target
+        X_orig = original_for_split.drop('Churn', axis=1, errors='ignore')
+        y_orig = original_for_split['Churn'] if 'Churn' in original_for_split.columns else None
+        
+        if y_orig is not None:
+            # Recreate the same split as in the pipeline (random_state=42, test_size=0.2)
+            _, X_test_raw, _, y_test_raw = train_test_split(
+                X_orig, y_orig, test_size=0.2, random_state=42, stratify=y_orig
+            )
+            results_df = X_test_raw.reset_index(drop=True).copy()
+        else:
+            # Fallback to using preprocessed features
+            results_df = X_test.copy()
+    else:
+        # Fallback to using preprocessed features if original data not available
+        results_df = X_test.copy()
+    
+    # Add predictions
     results_df['churn_probability'] = churn_probabilities
     results_df['risk_tier'] = risk_tiers_custom
     if y_test is not None:
         results_df['actual_churn'] = y_test.values
     
-    # Add original data columns if available
-    if original_data is not None and len(original_data) >= len(results_df):
-        # Merge key customer attributes
-        key_cols = ['customerID', 'gender', 'SeniorCitizen', 'Partner', 'Dependents', 
-                    'tenure', 'Contract', 'MonthlyCharges', 'TotalCharges']
-        available_cols = [col for col in key_cols if col in original_data.columns]
-        
-        for col in available_cols:
-            if col not in results_df.columns:
-                results_df[col] = original_data[col].iloc[:len(results_df)].values
+    # Load feature engineer for individual predictions
+    feature_engineer = load_feature_engineer()
     
     # Store in session state
     st.session_state['results_df'] = results_df
     st.session_state['model'] = model
-    st.session_state['X_test'] = X_test
+    st.session_state['X_test'] = X_test  # Preprocessed features for model
     st.session_state['y_test'] = y_test
+    st.session_state['feature_engineer'] = feature_engineer
+    st.session_state['original_data'] = original_data
     
     # Create tabs for different pages
     tab1, tab2, tab3, tab4 = st.tabs([
@@ -521,6 +539,11 @@ def render_atrisk_customers_page(results_df):
     
     # Calculate retention values
     from src.retention_strategy import calculate_retention_value
+    
+    # Check if we have any customers after filtering
+    if len(filtered_df) == 0:
+        st.warning("⚠️ No customers match the current filters. Try adjusting your filter criteria.")
+        return
     
     retention_values = []
     recommendations = []
@@ -1177,7 +1200,7 @@ def render_individual_prediction_page(model, original_data):
         # Create customer dataframe
         customer_data = pd.DataFrame({
             'gender': [gender],
-            'SeniorCitizen': [1 if senior_citizen == "Yes" else 0],
+            'SeniorCitizen': [senior_citizen],  # Keep as "Yes" or "No" string
             'Partner': [partner],
             'Dependents': [dependents],
             'tenure': [tenure],
